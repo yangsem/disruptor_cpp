@@ -64,15 +64,12 @@ public:
 
                 if (unlikely(uTimeoutUs == uNoTimeout))
                 {
-                    m_cond.wait(lock, [&]() { return m_bNotify; });
+                    m_cond.wait(lock);
                 }
                 else
                 {
-                    m_cond.wait_for(lock, std::chrono::microseconds(uTimeoutUs),
-                                    [&]() { return m_bNotify; });
+                    m_cond.wait_for(lock, std::chrono::microseconds(uTimeoutUs));
                 }
-
-                m_bNotify = false;
             }
 
             uAvailableSequence = lpRingBuffer->GetCurSor();
@@ -83,18 +80,12 @@ public:
 
     void NotifyAll()
     {
-        {
-            std::lock_guard<std::mutex> guard(m_mutex);
-            m_bNotify = true;
-        }
-
         m_cond.notify_all();
     }
 
 private:
     std::mutex m_mutex;
     std::condition_variable m_cond;
-    bool m_bNotify{false};
 };
 
 template <typename Entry>

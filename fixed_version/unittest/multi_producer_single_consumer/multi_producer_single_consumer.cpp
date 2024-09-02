@@ -16,27 +16,36 @@ int main(int argc, const char *argv[])
         return -1;
     }
 
-    MyProducer myProducer;
-    auto iErrorNo = myProducer.Init(lpFactory, "singleton_producer");
-    if (iErrorNo != 0)
-    {
-        std::cerr << "MyProducer Init Failed" << std::endl;
-        return -1;
-    }
-
+    constexpr uint32_t uSize = 2;
+    MyProducer myProducer[uSize];
     MyConsumer myConsumer;
-    iErrorNo = myConsumer.Init(lpFactory, "singleton_blocking_consumer");
+
+    for (uint32_t i = 0; i < uSize; i++)
+    {
+        auto iErrorNo = myProducer[i].Init(lpFactory, "single_producer", i, 1000000);
+        if (iErrorNo != 0)
+        {
+            std::cerr << "MyProducer " << i << " Init Failed" << std::endl;
+            return -1;
+        }
+    }
+    
+
+    auto iErrorNo = myConsumer.Init(lpFactory, "multi_blocking_consumer_1", 0);
     if (iErrorNo != 0)
     {
         std::cerr << "MyConsumer Init Failed" << std::endl;
         return -1;
     }
 
-    iErrorNo = myProducer.Start();
-    if (iErrorNo != 0)
+    for (uint32_t i = 0; i < uSize; i++)
     {
-        std::cerr << "MyProducer Start Failed" << std::endl;
-        return -1;
+        iErrorNo = myProducer[i].Start();
+        if (iErrorNo != 0)
+        {
+            std::cerr << "MyProducer " << i << " Start Failed" << std::endl;
+            return -1;
+        }
     }
 
     iErrorNo = myConsumer.Start();

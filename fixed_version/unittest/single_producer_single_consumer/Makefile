@@ -28,7 +28,7 @@ DEFINES :=
 EXTRA_CFLAGS := -O0 -g -std=c++11
 # inc-y:          Header include paths.
 #                 头文件搜索目录
-inc-y := ..
+inc-y := .. ../..
 # src-y:          Sources. The items ending with a trailing / are regarded as directories, the others
 #                 are regareded as files. The files with specified suffixes in those directories will
 #                 be automatically involved in compilation.
@@ -77,7 +77,7 @@ DEPEND_SUFFIX :=
 TARGET_TYPE := EXE
 # TARGET:         The path name of the final target.
 #                 整个工程最终产生的target文件名
-TARGET := singleton_producer_consumer_test
+TARGET := single_producer_single_consumer.out
 # IGNORE_ME:      The changes of this script will not cause remaking of any target.
 IGNORE_ME := 
 # CENTRALIZED_SINGLE_DEPEND_FILE:  Use one single dependency file instead of 
